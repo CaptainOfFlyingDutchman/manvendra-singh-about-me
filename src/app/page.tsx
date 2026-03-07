@@ -1,5 +1,12 @@
-import styles from "./page.module.css";
+"use client";
+
+import { TestButton } from "@/TestButton";
 
 export default function Home() {
-  return <div>About Me — Manvendra Singh</div>;
+  return (
+    <div>
+      <div>About Me — Manvendra Singh</div>
+      <TestButton />
+    </div>
+  );
 }
