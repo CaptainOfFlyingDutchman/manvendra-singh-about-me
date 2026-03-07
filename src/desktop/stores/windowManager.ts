@@ -21,6 +21,7 @@ type WindowManagerState = {
 type WindowManagerActions = {
   openWindow: <T extends AppType>(config: OpenWindowConfig<T>) => string;
   closeWindow: (id: string) => void;
+  focusWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
   maximizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
@@ -87,8 +88,36 @@ export const useWindowManager = create<
           throw new Error("closeWindow not implemented");
         },
 
-        focusWindow: () => {
-          throw new Error("focusWindow not implemented");
+        focusWindow: (id) => {
+          const state = get();
+
+          if (state.focusedWindowId === id) {
+            return;
+          }
+
+          const newZ = state.zCounter + 1;
+
+          set(
+            (state) => {
+              const target = state.windows[id];
+
+              if (!target) {
+                return;
+              }
+
+              Object.values(state.windows).forEach((win) => {
+                win.isFocused = false;
+              });
+
+              target.isFocused = true;
+              target.zIndex = newZ;
+
+              state.focusedWindowId = id;
+              state.zCounter = newZ;
+            },
+            false,
+            "window/focus",
+          );
         },
 
         minimizeWindow: () => {

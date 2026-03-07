@@ -12,9 +12,21 @@ export function TestButton() {
       },
     });
   };
+
   return (
-    <button type="button" onClick={handleClick}>
-      OpenTestWindow
-    </button>
+    <div>
+      <button type="button" onClick={handleClick}>
+        OpenTestWindow
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          const focus = useWindowManager.getState().focusWindow;
+          focus("win_617abbf1-3640-4043-ae43-c91c52c43ab0");
+        }}
+      >
+        Focus window
+      </button>
+    </div>
   );
 }
