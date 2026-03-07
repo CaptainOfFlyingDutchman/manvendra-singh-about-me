@@ -189,8 +189,41 @@ export const useWindowManager = create<
           );
         },
 
-        maximizeWindow: () => {
-          throw new Error("maximizeWindow not implemented");
+        maximizeWindow: (id) => {
+          set(
+            (state) => {
+              const win = state.windows[id];
+              if (!win) {
+                return;
+              }
+
+              if (!win.isMaximized) {
+                // Save the previous geometry
+                win.previousGeometry = {
+                  position: { ...win.position },
+                  size: { ...win.size },
+                };
+
+                win.position = { x: 0, y: 0 };
+                win.size = {
+                  width: window.innerWidth,
+                  height: window.innerHeight,
+                };
+
+                win.isMaximized = true;
+              } else {
+                // Restore the previous geometry
+                if (win.previousGeometry) {
+                  win.position = win.previousGeometry.position;
+                  win.size = win.previousGeometry.size;
+                }
+
+                win.isMaximized = false;
+              }
+            },
+            false,
+            "window/maximize",
+          );
         },
 
         restoreWindow: (id) => {

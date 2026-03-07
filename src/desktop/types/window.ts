@@ -27,6 +27,12 @@ export type WindowInstance<T extends AppType = AppType> = {
   position: { x: number; y: number };
   size: { width: number; height: number };
 
+  // used for restoring after maximize operation
+  previousGeometry?: {
+    position: { x: number; y: number };
+    size: { width: number; height: number };
+  };
+
   // app data
   payload: AppPayloadMap[T];
 
