@@ -1,6 +1,6 @@
+import { WindowControls } from "@/desktop/components/WindowFrame/WindowControls";
 import { useWindowManager } from "@/desktop/stores/windowManager";
 import type { WindowInstance } from "@/desktop/types/window";
-
 import styles from "./WindowFrame.module.css";
 
 type WindowFrameProps = {
@@ -24,7 +24,11 @@ export function WindowFrame({ window }: WindowFrameProps) {
       style={style}
       onMouseDown={() => focusWindow(window.id)}
     >
-      <div className={styles.titleBar}>{window.title}</div>
+      <div className={styles.titleBar}>
+        <div className={styles.title}>{window.title}</div>
+
+        <WindowControls windowId={window.id} />
+      </div>
 
       <div className={styles.content}>Window Content</div>
     </div>

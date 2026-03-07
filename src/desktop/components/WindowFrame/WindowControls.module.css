@@ -1,0 +1,41 @@
+.controls {
+  display: flex;
+}
+
+.button {
+  width: 32px;
+  height: 28px;
+
+  border: none;
+  background: transparent;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.close:hover {
+  background: #e81123;
+}
+
+/* biome-ignore lint/suspicious/noEmptyBlock: todo */
+.minimize {
+}
+
+/* biome-ignore lint/suspicious/noEmptyBlock: todo */
+.maximize {
+}
+
+/* biome-ignore lint/suspicious/noEmptyBlock: todo */
+.close {
+}
