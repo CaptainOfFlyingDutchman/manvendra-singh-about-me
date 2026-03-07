@@ -1,4 +1,5 @@
 import { WindowControls } from "@/desktop/components/WindowFrame/WindowControls";
+import { useWindowDrag } from "@/desktop/hooks/useWindowDrag";
 import { useWindowManager } from "@/desktop/stores/windowManager";
 import type { WindowInstance } from "@/desktop/types/window";
 import styles from "./WindowFrame.module.css";
@@ -9,6 +10,8 @@ type WindowFrameProps = {
 
 export function WindowFrame({ window }: WindowFrameProps) {
   const focusWindow = useWindowManager((s) => s.focusWindow);
+
+  const { handlePointerDown } = useWindowDrag(window.id);
 
   const style = {
     zIndex: window.zIndex,
@@ -23,6 +26,7 @@ export function WindowFrame({ window }: WindowFrameProps) {
       className={styles.window}
       style={style}
       onMouseDown={() => focusWindow(window.id)}
+      onPointerDown={handlePointerDown}
     >
       <div className={styles.titleBar}>
         <div className={styles.title}>{window.title}</div>

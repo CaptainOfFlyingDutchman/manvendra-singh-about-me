@@ -14,6 +14,8 @@
 }
 
 .titleBar {
+  cursor: grab;
+
   height: 32px;
 
   display: flex;
@@ -27,6 +29,10 @@
   background: linear-gradient(to bottom, #6aa6ff, #2b6be6);
 
   color: white;
+}
+
+.titleBar:active {
+  cursor: grabbing;
 }
 
 .title {

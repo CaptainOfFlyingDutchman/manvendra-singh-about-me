@@ -255,8 +255,23 @@ export const useWindowManager = create<
           );
         },
 
-        moveWindow: () => {
-          throw new Error("moveWindow not implemented");
+        moveWindow: (id, pos) => {
+          set(
+            (state) => {
+              const win = state.windows[id];
+              if (!win) {
+                return;
+              }
+
+              if (win.isMaximized) {
+                return;
+              }
+
+              win.position = pos;
+            },
+            false,
+            "window/move",
+          );
         },
 
         resizeWindow: () => {
