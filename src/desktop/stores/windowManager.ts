@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+
 import type {
   AppType,
   OpenWindowConfig,
@@ -29,88 +31,87 @@ type WindowManagerActions = {
 export const useWindowManager = create<
   WindowManagerState & WindowManagerActions
 >()(
-  devtools(() => {
-    return {
-      windows: {},
-      zCounter: 1,
-      focusedWindowId: null,
+  devtools(
+    immer((set, get) => {
+      return {
+        windows: {},
+        zCounter: 1,
+        focusedWindowId: null,
 
-      // actions
-      openWindow: (config) => {
-        const id = generateWindowId();
+        // actions
+        openWindow: (config) => {
+          const id = generateWindowId();
 
-        const state = useWindowManager.getState();
+          const state = useWindowManager.getState();
 
-        const zIndex = state.zCounter + 1;
+          const zIndex = state.zCounter + 1;
 
-        const newWindow: WindowInstance = {
-          id,
-          appType: config.appType,
-          title: config.title,
+          const newWindow: WindowInstance = {
+            id,
+            appType: config.appType,
+            title: config.title,
 
-          isMinimized: false,
-          isMaximized: false,
-          isFocused: true,
+            isMinimized: false,
+            isMaximized: false,
+            isFocused: true,
 
-          zIndex,
+            zIndex,
 
-          position: config.initialPosition ?? { x: 120, y: 120 },
+            position: config.initialPosition ?? { x: 120, y: 120 },
 
-          size: config.initialSize ?? { width: 800, height: 500 },
+            size: config.initialSize ?? { width: 800, height: 500 },
 
-          payload: config.payload,
+            payload: config.payload,
 
-          createdAt: Date.now(),
-        };
-
-        useWindowManager.setState((prev) => {
-          const updatedWindows: Record<string, WindowInstance> = {};
-
-          for (const win of Object.values(prev.windows)) {
-            updatedWindows[win.id] = {
-              ...win,
-              isFocused: false,
-            };
-          }
-
-          updatedWindows[id] = newWindow;
-
-          return {
-            windows: updatedWindows,
-            zCounter: zIndex,
-            focusedWindowId: id,
+            createdAt: Date.now(),
           };
-        });
-        return id;
-      },
 
-      closeWindow: () => {
-        throw new Error("closeWindow not implemented");
-      },
+          set(
+            (state) => {
+              Object.values(state.windows).forEach((win) => {
+                win.isFocused = false;
+              });
 
-      focusWindow: () => {
-        throw new Error("focusWindow not implemented");
-      },
+              state.windows[id] = newWindow;
+              state.zCounter = zIndex;
+              state.focusedWindowId = id;
+            },
+            false,
+            "window/open",
+          );
 
-      minimizeWindow: () => {
-        throw new Error("minimizeWindow not implemented");
-      },
+          return id;
+        },
 
-      maximizeWindow: () => {
-        throw new Error("maximizeWindow not implemented");
-      },
+        closeWindow: () => {
+          throw new Error("closeWindow not implemented");
+        },
 
-      restoreWindow: () => {
-        throw new Error("restoreWindow not implemented");
-      },
+        focusWindow: () => {
+          throw new Error("focusWindow not implemented");
+        },
 
-      moveWindow: () => {
-        throw new Error("moveWindow not implemented");
-      },
+        minimizeWindow: () => {
+          throw new Error("minimizeWindow not implemented");
+        },
 
-      resizeWindow: () => {
-        throw new Error("resizeWindow not implemented");
-      },
-    };
-  }),
+        maximizeWindow: () => {
+          throw new Error("maximizeWindow not implemented");
+        },
+
+        restoreWindow: () => {
+          throw new Error("restoreWindow not implemented");
+        },
+
+        moveWindow: () => {
+          throw new Error("moveWindow not implemented");
+        },
+
+        resizeWindow: () => {
+          throw new Error("resizeWindow not implemented");
+        },
+      };
+    }),
+    { name: "windowManager" },
+  ),
 );
