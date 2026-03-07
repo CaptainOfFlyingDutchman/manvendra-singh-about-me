@@ -28,7 +28,7 @@ export type WindowInstance<T extends AppType = AppType> = {
   size: { width: number; height: number };
 
   // app data
-  paylod: AppPayloadMap[T];
+  payload: AppPayloadMap[T];
 
   // metadata
   createdAt: number;
@@ -40,5 +40,5 @@ export type OpenWindowConfig<T extends AppType> = {
   payload: AppPayloadMap[T];
 
   initialSize?: { width: number; height: number };
-  initialPosotion?: { x: number; y: number };
+  initialPosition?: { x: number; y: number };
 };
