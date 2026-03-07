@@ -84,8 +84,36 @@ export const useWindowManager = create<
           return id;
         },
 
-        closeWindow: () => {
-          throw new Error("closeWindow not implemented");
+        closeWindow: (id) => {
+          set(
+            (state) => {
+              const wasFocused = state.focusedWindowId === id;
+
+              delete state.windows[id];
+
+              if (!wasFocused) {
+                return;
+              }
+
+              const remaining = Object.values(state.windows);
+
+              if (remaining.length === 0) {
+                state.focusedWindowId = null;
+
+                return;
+              }
+
+              // pick a window with the highest zIndex
+              const next = remaining.reduce((top, win) => {
+                return win.zIndex > top.zIndex ? win : top;
+              });
+
+              next.isFocused = true;
+              state.focusedWindowId = next.id;
+            },
+            false,
+            "window/close",
+          );
         },
 
         focusWindow: (id) => {

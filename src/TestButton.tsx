@@ -18,6 +18,7 @@ export function TestButton() {
       <button type="button" onClick={handleClick}>
         OpenTestWindow
       </button>
+
       <button
         type="button"
         onClick={() => {
@@ -26,6 +27,16 @@ export function TestButton() {
         }}
       >
         Focus window
+      </button>
+
+      <button
+        type="button"
+        onClick={() => {
+          const close = useWindowManager.getState().closeWindow;
+          close("win_2cf13304-89d0-44c6-9313-43a05363b528");
+        }}
+      >
+        Close window
       </button>
     </div>
   );
