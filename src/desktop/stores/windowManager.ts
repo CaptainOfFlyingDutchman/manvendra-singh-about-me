@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { getTopWindow } from "@/desktop/core/windowUtils";
 
 import type {
   AppType,
@@ -95,18 +96,13 @@ export const useWindowManager = create<
                 return;
               }
 
-              const remaining = Object.values(state.windows);
+              const next = getTopWindow(state.windows);
 
-              if (remaining.length === 0) {
+              if (!next) {
                 state.focusedWindowId = null;
 
                 return;
               }
-
-              // pick a window with the highest zIndex
-              const next = remaining.reduce((top, win) => {
-                return win.zIndex > top.zIndex ? win : top;
-              });
 
               next.isFocused = true;
               state.focusedWindowId = next.id;
@@ -148,16 +144,82 @@ export const useWindowManager = create<
           );
         },
 
-        minimizeWindow: () => {
-          throw new Error("minimizeWindow not implemented");
+        minimizeWindow: (id) => {
+          set(
+            (state) => {
+              const target = state.windows[id];
+
+              if (!target) {
+                return;
+              }
+
+              const wasFocused = state.focusedWindowId === id;
+
+              target.isMinimized = true;
+              target.isFocused = false;
+
+              // If the minimized window wasn't focused,
+              // we don't need to change focus.
+              if (!wasFocused) {
+                return;
+              }
+
+              // Find windows that are still visible
+              const candidates: Record<string, WindowInstance> = {};
+
+              Object.values(state.windows).forEach((win) => {
+                if (!win.isMinimized && win.id !== id) {
+                  candidates[win.id] = win;
+                }
+              });
+
+              const next = getTopWindow(candidates);
+
+              if (!next) {
+                state.focusedWindowId = null;
+
+                return;
+              }
+
+              next.isFocused = true;
+              state.focusedWindowId = next.id;
+            },
+            false,
+            "window/minimize",
+          );
         },
 
         maximizeWindow: () => {
           throw new Error("maximizeWindow not implemented");
         },
 
-        restoreWindow: () => {
-          throw new Error("restoreWindow not implemented");
+        restoreWindow: (id) => {
+          const state = get();
+
+          const newZ = state.zCounter + 1;
+
+          set(
+            (state) => {
+              const target = state.windows[id];
+
+              if (!target) {
+                return;
+              }
+
+              Object.values(state.windows).forEach((win) => {
+                win.isFocused = false;
+              });
+
+              target.isMinimized = false;
+              target.isFocused = true;
+              target.zIndex = newZ;
+
+              state.focusedWindowId = id;
+              state.zCounter = newZ;
+            },
+            false,
+            "window/restore",
+          );
         },
 
         moveWindow: () => {
