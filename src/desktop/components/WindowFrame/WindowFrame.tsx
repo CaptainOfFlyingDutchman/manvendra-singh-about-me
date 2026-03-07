@@ -1,5 +1,6 @@
 import { WindowControls } from "@/desktop/components/WindowFrame/WindowControls";
 import { useWindowDrag } from "@/desktop/hooks/useWindowDrag";
+import { useWindowResize } from "@/desktop/hooks/useWindowResize";
 import { useWindowManager } from "@/desktop/stores/windowManager";
 import type { WindowInstance } from "@/desktop/types/window";
 import styles from "./WindowFrame.module.css";
@@ -12,6 +13,9 @@ export function WindowFrame({ window }: WindowFrameProps) {
   const focusWindow = useWindowManager((s) => s.focusWindow);
 
   const { handlePointerDown } = useWindowDrag(window.id);
+  const { handlePointerDown: handleResizePointerDown } = useWindowResize(
+    window.id,
+  );
 
   const style = {
     zIndex: window.zIndex,
@@ -35,6 +39,11 @@ export function WindowFrame({ window }: WindowFrameProps) {
       </div>
 
       <div className={styles.content}>Window Content</div>
+
+      <div
+        className={styles.resizeHandle}
+        onPointerDown={handleResizePointerDown}
+      />
     </div>
   );
 }

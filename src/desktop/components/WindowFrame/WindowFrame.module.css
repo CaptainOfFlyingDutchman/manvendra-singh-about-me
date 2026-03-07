@@ -46,3 +46,14 @@
 
   padding: 12px;
 }
+
+.resizeHandle {
+  position: absolute;
+
+  width: 14px;
+  height: 14px;
+
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
+}

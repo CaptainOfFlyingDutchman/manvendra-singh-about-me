@@ -13,6 +13,9 @@ function generateWindowId() {
   return `win_${crypto.randomUUID()}`;
 }
 
+const MIN_WINDOW_WIDTH = 250;
+const MIN_WINDOW_HEIGHT = 130;
+
 type WindowManagerState = {
   windows: Record<string, WindowInstance>;
   zCounter: number;
@@ -274,8 +277,26 @@ export const useWindowManager = create<
           );
         },
 
-        resizeWindow: () => {
-          throw new Error("resizeWindow not implemented");
+        resizeWindow: (id, size) => {
+          set(
+            (state) => {
+              const win = state.windows[id];
+              if (!win) {
+                return;
+              }
+
+              if (win.isMaximized) {
+                return;
+              }
+
+              const width = Math.max(MIN_WINDOW_WIDTH, size.width);
+              const height = Math.max(MIN_WINDOW_HEIGHT, size.height);
+
+              win.size = { width, height };
+            },
+            false,
+            "window/resize",
+          );
         },
       };
     }),
