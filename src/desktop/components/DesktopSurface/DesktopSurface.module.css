@@ -2,9 +2,6 @@
   position: fixed;
   inset: 0;
 
-  /* remove it later when buttons are not required */
-  top: 70px;
-
   overflow: hidden;
 
   background: cornflowerblue;
