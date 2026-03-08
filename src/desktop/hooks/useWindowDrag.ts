@@ -4,6 +4,7 @@ import {
   useRef,
 } from "react";
 import { detectSnap, getSnapGeometry } from "@/desktop/core/snapWindow";
+import { useSnapPreviewStore } from "@/desktop/stores/snapPreviewStore";
 import {
   TASKBAR_HEIGHT,
   useWindowManager,
@@ -17,6 +18,9 @@ export function useWindowDrag(
   const focusWindow = useWindowManager((s) => s.focusWindow);
   const resizeWindow = useWindowManager((s) => s.resizeWindow);
   const getState = useWindowManager.getState;
+
+  const showSnap = useSnapPreviewStore((s) => s.show);
+  const hideSnap = useSnapPreviewStore((s) => s.hide);
 
   const draggingRef = useRef(false);
   const didMoveRef = useRef(false);
@@ -75,6 +79,14 @@ export function useWindowDrag(
 
     pointerRef.current = { x: e.clientX, y: e.clientY };
 
+    const snap = detectSnap(e.clientX, e.clientY);
+
+    if (snap) {
+      showSnap(snap);
+    } else {
+      hideSnap();
+    }
+
     frameRef.current.style.transform = `translate(${x}px, ${y}px)`;
   };
 
@@ -103,6 +115,8 @@ export function useWindowDrag(
           moveWindow(windowId, geometry.position);
 
           frameRef.current.style.transform = "";
+
+          hideSnap();
 
           return;
         }

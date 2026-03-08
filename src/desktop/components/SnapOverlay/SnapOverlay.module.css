@@ -1,0 +1,29 @@
+.overlay {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  pointer-events: none;
+
+  background: rgba(0, 120, 215, 0.25);
+  border: 2px solid rgba(0, 120, 215, 0.6);
+
+  z-index: 9999;
+}
+
+.left {
+  width: 50vw;
+  height: calc(100vh - 42px);
+}
+
+.right {
+  left: 50vw;
+  width: 50vw;
+  height: calc(100vh - 42px);
+}
+
+.top {
+  width: 100vw;
+  height: calc(100vh - 42px);
+}
