@@ -1,0 +1,26 @@
+.item {
+  height: 32px;
+
+  padding: 0 10px;
+
+  border: none;
+
+  display: flex;
+  align-items: center;
+
+  color: white;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  border-radius: 4px;
+
+  cursor: pointer;
+}
+
+.item:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.active {
+  background: rgba(255, 255, 255, 0.35);
+}

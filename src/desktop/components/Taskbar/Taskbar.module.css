@@ -1,0 +1,20 @@
+.taskbar {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+
+  background: linear-gradient(to bottom, #4a6db3, #2b4a84);
+
+  padding: 0 8px;
+}
+
+.items {
+  display: flex;
+  gap: 4px;
+}
