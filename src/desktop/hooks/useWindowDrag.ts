@@ -95,7 +95,6 @@ export function useWindowDrag(
 
       const snap = detectSnap(x, y);
 
-      console.log("snap", snap);
       if (snap) {
         const geometry = getSnapGeometry(snap);
 
