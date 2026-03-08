@@ -1,5 +1,8 @@
 import { type PointerEvent as ReactPointerEvent, useRef } from "react";
-import { useWindowManager } from "@/desktop/stores/windowManager";
+import {
+  TAB_BAR_HEIGHT,
+  useWindowManager,
+} from "@/desktop/stores/windowManager";
 
 export function useWindowDrag(windowId: string) {
   const moveWindow = useWindowManager((s) => s.moveWindow);
@@ -36,6 +39,19 @@ export function useWindowDrag(windowId: string) {
 
   const handlePointerMove = (e: PointerEvent) => {
     if (!draggingRef.current) {
+      return;
+    }
+
+    const viewportWidth = window.innerWidth - TAB_BAR_HEIGHT;
+    const viewportHeight = window.innerHeight - TAB_BAR_HEIGHT;
+
+    // Stop movement if the cursor reaches horizontal screen edges
+    if (e.clientX <= 0 || e.clientX >= viewportWidth) {
+      return;
+    }
+
+    // Stop movement if the cursor reaches vertical screen edges
+    if (e.clientY <= 0 || e.clientY >= viewportHeight) {
       return;
     }
 

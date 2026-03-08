@@ -15,6 +15,7 @@ function generateWindowId() {
 
 const MIN_WINDOW_WIDTH = 250;
 const MIN_WINDOW_HEIGHT = 130;
+export const TAB_BAR_HEIGHT = 30;
 
 type WindowManagerState = {
   windows: Record<string, WindowInstance>;
