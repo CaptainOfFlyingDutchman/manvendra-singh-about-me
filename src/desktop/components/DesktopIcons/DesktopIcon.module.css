@@ -1,0 +1,25 @@
+.icon {
+  width: 80px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: white;
+
+  cursor: default;
+}
+
+.icon:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+}
+
+.image {
+  font-size: 32px;
+}
+
+.label {
+  font-size: 12px;
+  text-align: center;
+}

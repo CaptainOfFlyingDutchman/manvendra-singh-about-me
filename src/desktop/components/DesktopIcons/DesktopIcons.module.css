@@ -1,0 +1,9 @@
+.container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  display: grid;
+  grid-auto-rows: 80px;
+  gap: 12px;
+}
