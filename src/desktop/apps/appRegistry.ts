@@ -13,15 +13,15 @@ export type DesktopApp<T extends AppType = AppType> = {
 export const apps: DesktopApp[] = [
   {
     id: "browser",
-    title: "Browser",
+    title: "My Blog",
     appType: "browser",
-    payload: { url: "https://www.google.com" },
+    payload: { url: "https://manvendrask.com", title: "Manvendra Singh" },
   },
   {
     id: "chatgpt",
-    title: "ChatGPT",
+    title: "OpenAI",
     appType: "browser",
-    payload: { url: "https://chat.openai.com" },
+    payload: { url: "https://openai.com/", title: "OpenAI" },
   },
   {
     id: "imageViewer",

@@ -1,12 +1,13 @@
+import { AppRenderer } from "@/desktop/apps/renderers/AppRenderer";
 import { WindowControls } from "@/desktop/components/WindowFrame/WindowControls";
 import { useWindowDrag } from "@/desktop/hooks/useWindowDrag";
 import { useWindowResize } from "@/desktop/hooks/useWindowResize";
 import { useWindowManager } from "@/desktop/stores/windowManager";
-import type { WindowInstance } from "@/desktop/types/window";
+import type { WindowInstanceVariant } from "@/desktop/types/window";
 import styles from "./WindowFrame.module.css";
 
 type WindowFrameProps = {
-  window: WindowInstance;
+  window: WindowInstanceVariant;
 };
 
 export function WindowFrame({ window }: WindowFrameProps) {
@@ -38,7 +39,9 @@ export function WindowFrame({ window }: WindowFrameProps) {
         <WindowControls windowId={window.id} />
       </div>
 
-      <div className={styles.content}>Window Content</div>
+      <div className={styles.content}>
+        <AppRenderer window={window} />
+      </div>
 
       <div
         className={styles.resizeHandle}

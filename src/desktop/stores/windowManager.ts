@@ -6,7 +6,7 @@ import { getTopWindow } from "@/desktop/core/windowUtils";
 import type {
   AppType,
   OpenWindowConfig,
-  WindowInstance,
+  WindowInstanceVariant,
 } from "../types/window";
 
 function generateWindowId() {
@@ -18,7 +18,7 @@ const MIN_WINDOW_HEIGHT = 130;
 export const TAB_BAR_HEIGHT = 30;
 
 type WindowManagerState = {
-  windows: Record<string, WindowInstance>;
+  windows: Record<string, WindowInstanceVariant>;
   zCounter: number;
   focusedWindowId: string | null;
 };
@@ -52,7 +52,7 @@ export const useWindowManager = create<
 
           const zIndex = state.zCounter + 1;
 
-          const newWindow: WindowInstance = {
+          const newWindow = {
             id,
             appType: config.appType,
             title: config.title,
@@ -70,7 +70,7 @@ export const useWindowManager = create<
             payload: config.payload,
 
             createdAt: Date.now(),
-          };
+          } as WindowInstanceVariant;
 
           set(
             (state) => {
@@ -169,7 +169,7 @@ export const useWindowManager = create<
               }
 
               // Find windows that are still visible
-              const candidates: Record<string, WindowInstance> = {};
+              const candidates: Record<string, WindowInstanceVariant> = {};
 
               Object.values(state.windows).forEach((win) => {
                 if (!win.isMinimized && win.id !== id) {

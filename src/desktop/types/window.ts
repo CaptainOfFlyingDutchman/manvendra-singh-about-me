@@ -1,7 +1,7 @@
 export type AppType = "browser" | "pdf" | "image" | "custom";
 
 export type AppPayloadMap = {
-  browser: { url: string };
+  browser: { url: string; title: string };
   pdf: { url: string; page?: number };
   image: { src: string; alt?: string };
   custom: {
@@ -9,6 +9,10 @@ export type AppPayloadMap = {
     props?: Record<string, unknown>;
   };
 };
+
+export type WindowInstanceVariant = {
+  [K in AppType]: WindowInstance<K>;
+}[AppType];
 
 export type WindowInstance<T extends AppType = AppType> = {
   id: string;

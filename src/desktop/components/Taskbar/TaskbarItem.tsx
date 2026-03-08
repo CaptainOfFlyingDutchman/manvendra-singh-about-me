@@ -1,9 +1,9 @@
 import { useWindowManager } from "@/desktop/stores/windowManager";
-import type { WindowInstance } from "@/desktop/types/window";
+import type { WindowInstanceVariant } from "@/desktop/types/window";
 import styles from "./TaskbarItem.module.css";
 
 type TaskbarItemProps = {
-  window: WindowInstance;
+  window: WindowInstanceVariant;
 };
 
 export function TaskbarItem({ window }: TaskbarItemProps) {

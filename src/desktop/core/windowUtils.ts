@@ -1,6 +1,6 @@
-import type { WindowInstance } from "@/desktop/types/window";
+import type { WindowInstanceVariant } from "@/desktop/types/window";
 
-export function getTopWindow(windows: Record<string, WindowInstance>) {
+export function getTopWindow(windows: Record<string, WindowInstanceVariant>) {
   const values = Object.values(windows);
 
   if (values.length === 0) {
