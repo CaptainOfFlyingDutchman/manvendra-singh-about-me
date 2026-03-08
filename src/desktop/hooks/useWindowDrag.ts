@@ -1,6 +1,6 @@
 import { type PointerEvent as ReactPointerEvent, useRef } from "react";
 import {
-  TAB_BAR_HEIGHT,
+  TASKBAR_HEIGHT,
   useWindowManager,
 } from "@/desktop/stores/windowManager";
 
@@ -42,8 +42,8 @@ export function useWindowDrag(windowId: string) {
       return;
     }
 
-    const viewportWidth = window.innerWidth - TAB_BAR_HEIGHT;
-    const viewportHeight = window.innerHeight - TAB_BAR_HEIGHT;
+    const viewportWidth = window.innerWidth - TASKBAR_HEIGHT;
+    const viewportHeight = window.innerHeight - TASKBAR_HEIGHT;
 
     // Stop movement if the cursor reaches horizontal screen edges
     if (e.clientX <= 0 || e.clientX >= viewportWidth) {

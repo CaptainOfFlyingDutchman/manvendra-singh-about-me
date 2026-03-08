@@ -15,7 +15,7 @@ function generateWindowId() {
 
 export const MIN_WINDOW_WIDTH = 250;
 export const MIN_WINDOW_HEIGHT = 130;
-export const TAB_BAR_HEIGHT = 30;
+export const TASKBAR_HEIGHT = 42;
 
 type WindowManagerState = {
   windows: Record<string, WindowInstanceVariant>;
@@ -211,7 +211,7 @@ export const useWindowManager = create<
                 win.position = { x: 0, y: 0 };
                 win.size = {
                   width: window.innerWidth,
-                  height: window.innerHeight,
+                  height: window.innerHeight - TASKBAR_HEIGHT,
                 };
 
                 win.isMaximized = true;
