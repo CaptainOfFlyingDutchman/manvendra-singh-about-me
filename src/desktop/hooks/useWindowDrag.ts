@@ -3,6 +3,7 @@ import {
   type RefObject,
   useRef,
 } from "react";
+import { detectSnap, getSnapGeometry } from "@/desktop/core/snapWindow";
 import {
   TASKBAR_HEIGHT,
   useWindowManager,
@@ -14,12 +15,14 @@ export function useWindowDrag(
 ) {
   const moveWindow = useWindowManager((s) => s.moveWindow);
   const focusWindow = useWindowManager((s) => s.focusWindow);
+  const resizeWindow = useWindowManager((s) => s.resizeWindow);
   const getState = useWindowManager.getState;
 
   const draggingRef = useRef(false);
   const didMoveRef = useRef(false);
   const offsetRef = useRef({ x: 0, y: 0 });
   const currentPositionRef = useRef({ x: 0, y: 0 });
+  const pointerRef = useRef({ x: 0, y: 0 });
 
   const handlePointerDown = (e: ReactPointerEvent) => {
     const state = getState();
@@ -50,7 +53,7 @@ export function useWindowDrag(
       return;
     }
 
-    const viewportWidth = window.innerWidth - TASKBAR_HEIGHT;
+    const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight - TASKBAR_HEIGHT;
 
     // Stop movement if the cursor reaches horizontal screen edges
@@ -70,6 +73,8 @@ export function useWindowDrag(
 
     currentPositionRef.current = { x, y };
 
+    pointerRef.current = { x: e.clientX, y: e.clientY };
+
     frameRef.current.style.transform = `translate(${x}px, ${y}px)`;
   };
 
@@ -86,6 +91,25 @@ export function useWindowDrag(
     // Only commit position to store when we actually dragged; a simple focus
     // click must not overwrite or clear the position (avoids window jumping).
     if (didMoveRef.current && frameRef.current) {
+      const { x, y } = pointerRef.current;
+
+      const snap = detectSnap(x, y);
+
+      console.log("snap", snap);
+      if (snap) {
+        const geometry = getSnapGeometry(snap);
+
+        if (geometry) {
+          resizeWindow(windowId, geometry.size);
+          moveWindow(windowId, geometry.position);
+
+          frameRef.current.style.transform = "";
+
+          return;
+        }
+      }
+
+      // Normal drag commit
       moveWindow(windowId, currentPositionRef.current);
 
       frameRef.current.style.transform = "";
