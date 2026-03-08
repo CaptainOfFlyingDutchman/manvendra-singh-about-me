@@ -17,6 +17,10 @@ export const MIN_WINDOW_WIDTH = 250;
 export const MIN_WINDOW_HEIGHT = 130;
 export const TASKBAR_HEIGHT = 42;
 
+const CASCADE_START_X = 120;
+const CASCADE_START_Y = 120;
+const CASCADE_OFFSET = 52;
+
 type WindowManagerState = {
   windows: Record<string, WindowInstanceVariant>;
   zCounter: number;
@@ -52,6 +56,13 @@ export const useWindowManager = create<
 
           const zIndex = state.zCounter + 1;
 
+          const windowCount = Object.keys(state.windows).length;
+
+          const position = config.initialPosition ?? {
+            x: CASCADE_START_X + windowCount * CASCADE_OFFSET,
+            y: CASCADE_START_Y + windowCount * CASCADE_OFFSET,
+          };
+
           const newWindow = {
             id,
             appType: config.appType,
@@ -63,7 +74,7 @@ export const useWindowManager = create<
 
             zIndex,
 
-            position: config.initialPosition ?? { x: 120, y: 120 },
+            position,
 
             size: config.initialSize ?? { width: 800, height: 500 },
 
