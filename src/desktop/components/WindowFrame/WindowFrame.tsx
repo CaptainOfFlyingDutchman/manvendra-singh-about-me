@@ -13,11 +13,10 @@ type WindowFrameProps = {
 export function WindowFrame({ window }: WindowFrameProps) {
   const focusWindow = useWindowManager((s) => s.focusWindow);
 
-  const { handlePointerDown } = useWindowDrag(window.id);
-  const {
-    handlePointerDown: handleResizePointerDown,
-    frameRef,
-  } = useWindowResize(window.id);
+  const { handlePointerDown: handleResizePointerDown, frameRef } =
+    useWindowResize(window.id);
+
+  const { handlePointerDown } = useWindowDrag(window.id, frameRef);
 
   const style = {
     zIndex: window.zIndex,
