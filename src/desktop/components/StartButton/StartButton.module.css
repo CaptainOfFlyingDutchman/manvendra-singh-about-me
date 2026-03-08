@@ -1,0 +1,17 @@
+.startButton {
+  height: 34px;
+
+  padding: 0 14px;
+
+  border: none;
+
+  color: white;
+
+  font-weight: bold;
+
+  background: linear-gradient(to bottom, #6ecf4a, #2f7c1e);
+
+  border-radius: 6px;
+
+  cursor: pointer;
+}

@@ -1,0 +1,34 @@
+.menu {
+  position: fixed;
+
+  bottom: 44px;
+  left: 8px;
+
+  width: 260px;
+
+  padding: 10px;
+
+  border-radius: 8px;
+
+  background: white;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.item {
+  width: 100%;
+
+  padding: 8px;
+
+  border: none;
+
+  text-align: left;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.item:hover {
+  background: #eee;
+}
