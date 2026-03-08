@@ -13,8 +13,8 @@ function generateWindowId() {
   return `win_${crypto.randomUUID()}`;
 }
 
-const MIN_WINDOW_WIDTH = 250;
-const MIN_WINDOW_HEIGHT = 130;
+export const MIN_WINDOW_WIDTH = 250;
+export const MIN_WINDOW_HEIGHT = 130;
 export const TAB_BAR_HEIGHT = 30;
 
 type WindowManagerState = {

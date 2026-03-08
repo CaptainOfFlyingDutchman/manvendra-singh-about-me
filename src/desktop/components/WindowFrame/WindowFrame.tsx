@@ -14,9 +14,10 @@ export function WindowFrame({ window }: WindowFrameProps) {
   const focusWindow = useWindowManager((s) => s.focusWindow);
 
   const { handlePointerDown } = useWindowDrag(window.id);
-  const { handlePointerDown: handleResizePointerDown } = useWindowResize(
-    window.id,
-  );
+  const {
+    handlePointerDown: handleResizePointerDown,
+    frameRef,
+  } = useWindowResize(window.id);
 
   const style = {
     zIndex: window.zIndex,
@@ -28,6 +29,7 @@ export function WindowFrame({ window }: WindowFrameProps) {
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: a box is required
     <div
+      ref={frameRef}
       className={styles.window}
       style={style}
       onMouseDown={() => focusWindow(window.id)}
