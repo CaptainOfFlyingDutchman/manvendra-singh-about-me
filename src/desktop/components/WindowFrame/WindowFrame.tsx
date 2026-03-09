@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { AppRenderer } from "@/desktop/apps/renderers/AppRenderer";
 import { WindowControls } from "@/desktop/components/WindowFrame/WindowControls";
 import { useWindowDrag } from "@/desktop/hooks/useWindowDrag";
@@ -12,9 +13,16 @@ type WindowFrameProps = {
 
 export function WindowFrame({ window }: WindowFrameProps) {
   const focusWindow = useWindowManager((s) => s.focusWindow);
+  const frameRef = useRef<HTMLDivElement | null>(null);
 
-  const { handlePointerDown: handleResizePointerDown, frameRef } =
-    useWindowResize(window.id);
+  const resizeE = useWindowResize(window.id, "e", frameRef);
+  const resizeS = useWindowResize(window.id, "s", frameRef);
+  const resizeW = useWindowResize(window.id, "w", frameRef);
+  const resizeN = useWindowResize(window.id, "n", frameRef);
+  const resizeNE = useWindowResize(window.id, "ne", frameRef);
+  const resizeNW = useWindowResize(window.id, "nw", frameRef);
+  const resizeSW = useWindowResize(window.id, "sw", frameRef);
+  const resizeSE = useWindowResize(window.id, "se", frameRef);
 
   const { handlePointerDown } = useWindowDrag(window.id, frameRef);
 
@@ -45,8 +53,37 @@ export function WindowFrame({ window }: WindowFrameProps) {
       </div>
 
       <div
-        className={styles.resizeHandle}
-        onPointerDown={handleResizePointerDown}
+        className={styles.resizeE}
+        onPointerDown={resizeE.handlePointerDown}
+      />
+      <div
+        className={styles.resizeS}
+        onPointerDown={resizeS.handlePointerDown}
+      />
+      <div
+        className={styles.resizeW}
+        onPointerDown={resizeW.handlePointerDown}
+      />
+      <div
+        className={styles.resizeN}
+        onPointerDown={resizeN.handlePointerDown}
+      />
+
+      <div
+        className={styles.resizeNE}
+        onPointerDown={resizeNE.handlePointerDown}
+      />
+      <div
+        className={styles.resizeNW}
+        onPointerDown={resizeNW.handlePointerDown}
+      />
+      <div
+        className={styles.resizeSE}
+        onPointerDown={resizeSE.handlePointerDown}
+      />
+      <div
+        className={styles.resizeSW}
+        onPointerDown={resizeSW.handlePointerDown}
       />
     </div>
   );

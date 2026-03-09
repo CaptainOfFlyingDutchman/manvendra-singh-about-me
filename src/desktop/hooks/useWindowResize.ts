@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { type PointerEvent as ReactPointerEvent, useRef } from "react";
 import {
   MIN_WINDOW_HEIGHT,
@@ -12,13 +13,18 @@ function clampSize(width: number, height: number) {
   };
 }
 
-export function useWindowResize(windowId: string) {
-  const resizeWindow = useWindowManager((s) => s.resizeWindow);
-  const getState = useWindowManager.getState;
+type ResizeDirection = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
 
-  const frameRef = useRef<HTMLDivElement | null>(null);
+export function useWindowResize(
+  windowId: string,
+  direction: ResizeDirection,
+  frameRef: RefObject<HTMLDivElement | null>,
+) {
+  const resizeWindow = useWindowManager((s) => s.resizeWindow);
+  const moveWindow = useWindowManager((s) => s.moveWindow);
+  const getState = useWindowManager.getState;
   const resizingRef = useRef(false);
-  const startRef = useRef({ x: 0, y: 0, width: 0, height: 0 });
+  const startRef = useRef({ x: 0, y: 0, width: 0, height: 0, left: 0, top: 0 });
 
   const handlePointerDown = (e: ReactPointerEvent) => {
     e.stopPropagation();
@@ -36,6 +42,8 @@ export function useWindowResize(windowId: string) {
       y: e.clientY,
       width: win.size.width,
       height: win.size.height,
+      left: win.position.x,
+      top: win.position.y,
     };
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -50,13 +58,44 @@ export function useWindowResize(windowId: string) {
     const dx = e.clientX - startRef.current.x;
     const dy = e.clientY - startRef.current.y;
 
-    const { width, height } = clampSize(
-      startRef.current.width + dx,
-      startRef.current.height + dy,
-    );
+    let width = startRef.current.width;
+    let height = startRef.current.height;
+    let left = startRef.current.left;
+    let top = startRef.current.top;
 
-    frameRef.current.style.width = `${width}px`;
-    frameRef.current.style.height = `${height}px`;
+    if (direction.includes("e")) {
+      width = startRef.current.width + dx;
+    }
+
+    if (direction.includes("s")) {
+      height = startRef.current.height + dy;
+    }
+
+    if (direction.includes("w")) {
+      width = startRef.current.width - dx;
+      left = startRef.current.left + dx;
+    }
+
+    if (direction.includes("n")) {
+      height = startRef.current.height - dy;
+      top = startRef.current.top + dy;
+    }
+
+    const size = clampSize(width, height);
+
+    // adjust position when clamped
+    if (direction.includes("w")) {
+      left = startRef.current.left + (startRef.current.width - size.width);
+    }
+
+    if (direction.includes("n")) {
+      top = startRef.current.top + (startRef.current.height - size.height);
+    }
+
+    frameRef.current.style.width = `${size.width}px`;
+    frameRef.current.style.height = `${size.height}px`;
+
+    frameRef.current.style.transform = `translate(${left}px, ${top}px)`;
   };
 
   const handlePointerUp = () => {
@@ -69,24 +108,37 @@ export function useWindowResize(windowId: string) {
     window.removeEventListener("pointermove", handlePointerMove);
     window.removeEventListener("pointerup", handlePointerUp);
 
-    if (frameRef.current) {
-      const w =
-        parseFloat(frameRef.current.style.width) || startRef.current.width;
-      const h =
-        parseFloat(frameRef.current.style.height) || startRef.current.height;
-
-      const { width, height } = clampSize(w, h);
-
-      resizeWindow(windowId, { width, height });
-
-      // Clear inline size so the store drives layout again
-      frameRef.current.style.width = "";
-      frameRef.current.style.height = "";
+    if (!frameRef.current) {
+      return;
     }
+
+    const w = frameRef.current.offsetWidth;
+    const h = frameRef.current.offsetHeight;
+
+    let x = startRef.current.left;
+    let y = startRef.current.top;
+
+    const transform = frameRef.current.style.transform;
+
+    if (transform) {
+      const match = transform.match(/translate\((.*)px,\s*(.*)px\)/);
+
+      if (match) {
+        x = parseFloat(match[1]);
+        y = parseFloat(match[2]);
+      }
+    }
+
+    const { width, height } = clampSize(w, h);
+
+    resizeWindow(windowId, { width, height });
+    moveWindow(windowId, { x, y });
+
+    // Don't clear inline styles; the next render will apply store values and avoid a visual jump
+    // frameRef.current.style.transform = "";
   };
 
   return {
     handlePointerDown,
-    frameRef,
   };
 }

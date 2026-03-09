@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
 
-  will-change: transform;
+  will-change: transform, width, height;
 }
 
 .titleBar {
@@ -49,13 +49,74 @@
   padding: 12px;
 }
 
-.resizeHandle {
+.resizeE {
   position: absolute;
+  right: -3px;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+}
 
-  width: 14px;
-  height: 14px;
+.resizeW {
+  position: absolute;
+  left: -3px;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+}
 
-  right: 0;
-  bottom: 0;
-  cursor: se-resize;
+.resizeN {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resizeS {
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resizeSE {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
+}
+
+.resizeSW {
+  position: absolute;
+  left: -4px;
+  bottom: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nesw-resize;
+}
+
+.resizeNE {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nesw-resize;
+}
+
+.resizeNW {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
 }
