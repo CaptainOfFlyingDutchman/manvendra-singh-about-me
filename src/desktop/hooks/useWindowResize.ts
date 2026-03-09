@@ -3,6 +3,7 @@ import { type PointerEvent as ReactPointerEvent, useRef } from "react";
 import {
   MIN_WINDOW_HEIGHT,
   MIN_WINDOW_WIDTH,
+  TASKBAR_HEIGHT,
   useWindowManager,
 } from "@/desktop/stores/windowManager";
 
@@ -55,8 +56,14 @@ export function useWindowResize(
       return;
     }
 
-    const dx = e.clientX - startRef.current.x;
-    const dy = e.clientY - startRef.current.y;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight - TASKBAR_HEIGHT;
+
+    const mouseX = Math.max(0, Math.min(e.clientX, viewportWidth));
+    const mouseY = Math.max(0, Math.min(e.clientY, viewportHeight));
+
+    const dx = mouseX - startRef.current.x;
+    const dy = mouseY - startRef.current.y;
 
     let width = startRef.current.width;
     let height = startRef.current.height;
