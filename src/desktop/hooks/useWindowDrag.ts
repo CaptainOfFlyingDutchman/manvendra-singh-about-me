@@ -3,6 +3,7 @@ import {
   type RefObject,
   useRef,
 } from "react";
+import type { SnapResult } from "@/desktop/core/snapWindow";
 import { detectSnap, getSnapGeometry } from "@/desktop/core/snapWindow";
 import { useSnapPreviewStore } from "@/desktop/stores/snapPreviewStore";
 import {
@@ -27,6 +28,7 @@ export function useWindowDrag(
   const offsetRef = useRef({ x: 0, y: 0 });
   const currentPositionRef = useRef({ x: 0, y: 0 });
   const pointerRef = useRef({ x: 0, y: 0 });
+  const lastSnapRef = useRef<SnapResult>(null);
 
   const handlePointerDown = (e: ReactPointerEvent) => {
     const state = getState();
@@ -81,10 +83,13 @@ export function useWindowDrag(
 
     const snap = detectSnap(e.clientX, e.clientY);
 
-    if (snap) {
-      showSnap(snap);
-    } else {
-      hideSnap();
+    if (snap !== lastSnapRef.current) {
+      lastSnapRef.current = snap;
+      if (snap) {
+        showSnap(snap);
+      } else {
+        hideSnap();
+      }
     }
 
     frameRef.current.style.transform = `translate(${x}px, ${y}px)`;
@@ -96,6 +101,7 @@ export function useWindowDrag(
     }
 
     draggingRef.current = false;
+    lastSnapRef.current = null;
 
     window.removeEventListener("pointermove", handlePointerMove);
     window.removeEventListener("pointerup", handlePointerUp);
