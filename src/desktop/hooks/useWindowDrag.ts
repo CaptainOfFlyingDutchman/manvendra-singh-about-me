@@ -18,6 +18,11 @@ export function useWindowDrag(
   const moveWindow = useWindowManager((s) => s.moveWindow);
   const focusWindow = useWindowManager((s) => s.focusWindow);
   const resizeWindow = useWindowManager((s) => s.resizeWindow);
+  const setPreviousGeometry = useWindowManager((s) => s.setPreviousGeometry);
+  const clearPreviousGeometry = useWindowManager(
+    (s) => s.clearPreviousGeometry,
+  );
+
   const getState = useWindowManager.getState;
 
   const showSnap = useSnapPreviewStore((s) => s.show);
@@ -38,15 +43,40 @@ export function useWindowDrag(
       return;
     }
 
+    const isSnapped =
+      win.position.x === 0 ||
+      win.position.x === window.innerWidth / 2 ||
+      win.size.width === window.innerWidth;
+
+    if (isSnapped && win.previousGeometry) {
+      const geometry = win.previousGeometry;
+
+      const width = geometry.size.width;
+      // const height = geometry.size.height;
+
+      const newX = e.clientX - width / 2;
+      const newY = e.clientY - offsetRef.current.y;
+
+      resizeWindow(windowId, geometry.size);
+      moveWindow(windowId, { x: newX, y: newY });
+
+      clearPreviousGeometry(windowId);
+
+      offsetRef.current = {
+        x: e.clientX - newX,
+        y: e.clientY - newY,
+      };
+    } else {
+      offsetRef.current = {
+        x: e.clientX - win.position.x,
+        y: e.clientY - win.position.y,
+      };
+    }
+
     draggingRef.current = true;
     didMoveRef.current = false;
 
     focusWindow(windowId);
-
-    offsetRef.current = {
-      x: e.clientX - win.position.x,
-      y: e.clientY - win.position.y,
-    };
 
     currentPositionRef.current = { x: win.position.x, y: win.position.y };
 
@@ -114,6 +144,16 @@ export function useWindowDrag(
       const snap = detectSnap(x, y);
 
       if (snap) {
+        const state = getState();
+        const win = state.windows[windowId];
+
+        if (win && !win.previousGeometry) {
+          setPreviousGeometry(windowId, {
+            position: { ...win.position },
+            size: { ...win.size },
+          });
+        }
+
         const geometry = getSnapGeometry(snap);
 
         if (geometry) {

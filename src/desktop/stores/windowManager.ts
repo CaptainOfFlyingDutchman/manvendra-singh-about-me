@@ -36,6 +36,14 @@ type WindowManagerActions = {
   restoreWindow: (id: string) => void;
   moveWindow: (id: string, pos: { x: number; y: number }) => void;
   resizeWindow: (id: string, size: { width: number; height: number }) => void;
+  setPreviousGeometry: (
+    id: string,
+    geometry: {
+      position: { x: number; y: number };
+      size: { width: number; height: number };
+    },
+  ) => void;
+  clearPreviousGeometry: (id: string) => void;
 };
 
 export const useWindowManager = create<
@@ -308,6 +316,36 @@ export const useWindowManager = create<
             },
             false,
             "window/resize",
+          );
+        },
+
+        setPreviousGeometry: (id, geometry) => {
+          set(
+            (state) => {
+              const win = state.windows[id];
+              if (!win) {
+                return;
+              }
+
+              win.previousGeometry = geometry;
+            },
+            false,
+            "window/setPreviousGeometry",
+          );
+        },
+
+        clearPreviousGeometry: (id) => {
+          set(
+            (state) => {
+              const win = state.windows[id];
+              if (!win) {
+                return;
+              }
+
+              win.previousGeometry = undefined;
+            },
+            false,
+            "window/clearPreviousGeometry",
           );
         },
       };
